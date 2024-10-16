@@ -17,6 +17,9 @@ I developed a program within the Streamlit environment that leverages Azure’s 
 # Set up Azure Services
 Tutorial: https://learn.microsoft.com/en-us/azure/ai-services/speech-service/get-started-speech-to-text?tabs=windows%2Cterminal&pivots=programming-language-python
 
+# Before running the program
+create file with name ".env" paste SPEECH_KEY and SERVICE_REGION
+
 # Run program
 ```bash
     streamlit run app.py
