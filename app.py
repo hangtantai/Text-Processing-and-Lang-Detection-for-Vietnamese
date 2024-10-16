@@ -38,10 +38,6 @@ with st.sidebar:
         req_type='stt'
     else: 
         req_type='tts'
-
-    st.markdown("[Source Code](https://github.com/Sgvkamalakar/Azure_AI_Speech_Services)")
-    st.markdown("[Explore my Codes](https://github.com/sgvkamalakar)")
-    st.markdown("[Connect with me on LinkedIn](https://www.linkedin.com/in/sgvkamlakar)")
     
 if req_type=="stt":
     icon='🗣️'
