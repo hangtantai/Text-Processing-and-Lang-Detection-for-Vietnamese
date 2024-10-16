@@ -5,8 +5,8 @@ import re
 DetectorFactory.seed = 0
 
 # Replace with your own subscription key and service region
-subscription_key = "b19de19c51f84273842767078f4a7d8b"
-service_region = "southeastasia"
+subscription_key = "your key"
+service_region = "your region"
 
 # Create a speech configuration
 speech_config = speechsdk.SpeechConfig(subscription=subscription_key, region=service_region)
