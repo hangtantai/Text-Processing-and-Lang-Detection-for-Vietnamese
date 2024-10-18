@@ -2,6 +2,7 @@ streamlit
 azure-cognitiveservices-speech
 python-dotenv
 vinorm
+maturin
 langdetect
 underthesea
 datetime
