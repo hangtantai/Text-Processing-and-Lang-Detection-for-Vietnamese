@@ -5,4 +5,4 @@ vinorm
 maturin
 langdetect
 underthesea
-datetime
+datetime; python_version == "3.11"
