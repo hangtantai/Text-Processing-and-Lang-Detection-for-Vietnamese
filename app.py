@@ -72,8 +72,8 @@ def text_to_speech(text,lang_code):
     try:
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
         audio_output_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
-        audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
-        speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_config, audio_output_config=audio_output_config)
+        # audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
+        speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_output_config)
 
         # Initialize SSML string
         ssml_string = "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>"
@@ -147,9 +147,9 @@ def text_to_speech_mono(text,lang_code):
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
         speech_config.speech_synthesis_language=lang_code
         audio_output_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
-        audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
+        # audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
         speech_config.speech_synthesis_voice_name = 'vi-VN-HoaiMyNeural'
-        speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_config, audio_output_config=audio_output_config)
+        speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_output_config)
         with st.spinner("Speaking 🗣️..."):
             result = speech_synthesizer.speak_text_async(text).get()
             if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
@@ -168,9 +168,9 @@ def text_to_speech_multi(text,lang_code):
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
         speech_config.speech_synthesis_language=lang_code
         audio_output_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
-        audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
+        # audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
         speech_config.speech_synthesis_voice_name = 'zh-CN-XiaoxiaoMultilingualNeural'
-        speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_config, audio_output_config=audio_output_config)
+        speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_output_config)
         with st.spinner("Speaking 🗣️..."):
             result = speech_synthesizer.speak_text_async(text).get()
             if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
