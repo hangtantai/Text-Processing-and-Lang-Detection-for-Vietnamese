@@ -1,4 +1,3 @@
-python_version == "3.11";
 streamlit
 azure-cognitiveservices-speech
 python-dotenv
