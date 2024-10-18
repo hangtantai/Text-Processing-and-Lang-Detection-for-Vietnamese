@@ -5,7 +5,7 @@ import azure.cognitiveservices.speech as speechsdk
 # utilization
 from dotenv import load_dotenv
 import os # file
-from vinorm import TTSnorm # mapping word by word
+# from vinorm import TTSnorm # mapping word by word
 from langdetect import detect, DetectorFactory, LangDetectException # detect vi or en
 from underthesea import lang_detect
 import re # search
@@ -86,7 +86,7 @@ def text_to_speech(text,lang_code):
         for word in words:
             # Detect the language of the current word
             if word.isdigit():
-                word = TTSnorm(word)
+                # word = TTSnorm(word)
                 language = 'vi'
             else:
                 if word.lower() in vietnamese_priority_words:
