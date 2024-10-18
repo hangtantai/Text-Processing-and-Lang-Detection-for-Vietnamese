@@ -93,7 +93,7 @@ def text_to_speech(text,lang_code):
                     language = 'vi'
                 else:
                     try:
-                        language = lang_detect(word)
+                        language = detect(word)
                     except LangDetectException:
                         language = 'vi'
                     if language not in language_list:
