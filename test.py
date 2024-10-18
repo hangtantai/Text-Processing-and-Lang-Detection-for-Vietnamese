@@ -76,5 +76,10 @@ def synthesize_multilingual_text(user_input):
         print(f"Encoding error: {e}")
 
 # Get user input
+<<<<<<< HEAD
 user_input = input("Enter text in English and Vietnamese: ")
 synthesize_multilingual_text(user_input)
+=======
+user_input = "Tư vấn bất động sản là một lĩnh vực đầy thách thức nhưng cũng rất hấp dẫn. Các chuyên gia tư vấn bất động sản không chỉ giúp khách hàng tìm kiếm và mua bán nhà đất mà còn cung cấp các dịch vụ tư vấn về đầu tư, pháp lý và quản lý tài sản. Họ cần có kiến thức sâu rộng về thị trường, khả năng phân tích và dự đoán xu hướng, cũng như kỹ năng giao tiếp và đàm phán xuất sắc. Một tư vấn viên giỏi sẽ giúp khách hàng đưa ra những quyết định thông minh, tối ưu hóa lợi nhuận và giảm thiểu rủi ro. Trong bối cảnh thị trường bất động sản luôn biến động, vai trò của các chuyên gia tư vấn càng trở nên quan trọng hơn bao giờ hết. Họ không chỉ là người hướng dẫn mà còn là người bạn đồng hành đáng tin cậy của khách hàng trên con đường đầu tư và phát triển tài sản."
+synthesize_multilingual_text(user_input)
+>>>>>>> a3cbcbf (Your commit message here)

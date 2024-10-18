@@ -39,29 +39,17 @@ lang_codes = {'Arabic': 'ar-EG','Bahasa Indonesian': 'id-ID','Bengali': 'bn-IN',
 
 # selected box
 with st.sidebar:
-    option = st.selectbox('Select Option',('Speech-to-Text',
-                                           'TTS(2 model): TTS2M', 
-                                           'TTS(Mono): TTSM',
-                                           'TTS(Multi): TSSMu'))
-    # Find the index of the default language
-    # Get the list of language keys
-    lang_keys = list(lang_codes.keys())
-    default_index = lang_keys.index(default_lang)
-    lang=st.selectbox('Choose the language',lang_keys, index=default_index)     
+    option = st.selectbox('Select Option',('Speech-to-Text','Text-to-Speech'))
+    lang=st.selectbox('Choose the language',list(lang_codes.keys()), index=5)     
     lang_code=lang_codes[lang]
 
     # check option
-    if(option=='TTS(2 model): TTS2M'): 
-        req_type='tts2m'
-    elif(option==('TTS(Mono): TTSM')):
-        req_type='ttsm'
-    elif(option==('TTS(Multi): TSSMu')): 
-        req_type='ttsmu'
-    else:
+    if(option=="Speech-to-Text"): 
         req_type='stt'
-        
+    else: 
+        req_type='tts'
     
-if req_type in ["stt"]:
+if req_type=="stt":
     icon='🗣️'
 else:
     icon='📝'     
@@ -139,47 +127,7 @@ def text_to_speech(text,lang_code):
             except UnicodeEncodeError as e:
                 print(f"Encoding error: {e}")
     except Exception as e:
-        st.error(f"An error occurred: {e}")    
-
-def text_to_speech_mono(text,lang_code):
-    try:
-        speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
-        speech_config.speech_synthesis_language=lang_code
-        audio_output_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True, filename=unique_filepath)
-        speech_config.speech_synthesis_voice_name = 'vi-VN-HoaiMyNeural'
-        speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_output_config)
-        with st.spinner("Speaking 🗣️..."):
-            result = speech_synthesizer.speak_text_async(text).get()
-            if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
-                st.success("Synthesized Speech !")
-            elif result.reason == speechsdk.ResultReason.Canceled:
-                cancellation_details = result.cancellation_details
-                st.error("Speech synthesis canceled due to ⚠{}".format(cancellation_details.reason))
-                if cancellation_details.reason == speechsdk.CancellationReason.Error:
-                    if cancellation_details.error_details:
-                        st.error("Error details: {}".format(cancellation_details.error_details))
-    except Exception as e:
-        st.error(f"An error occurred: {e}")   
-
-def text_to_speech_multi(text,lang_code):
-    try:
-        speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
-        speech_config.speech_synthesis_language=lang_code
-        audio_output_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True, filename=unique_filepath)
-        speech_config.speech_synthesis_voice_name = 'zh-CN-XiaoxiaoMultilingualNeural'
-        speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_output_config)
-        with st.spinner("Speaking 🗣️..."):
-            result = speech_synthesizer.speak_text_async(text).get()
-            if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
-                st.success("Synthesized Speech !")
-            elif result.reason == speechsdk.ResultReason.Canceled:
-                cancellation_details = result.cancellation_details
-                st.error("Speech synthesis canceled due to ⚠{}".format(cancellation_details.reason))
-                if cancellation_details.reason == speechsdk.CancellationReason.Error:
-                    if cancellation_details.error_details:
-                        st.error("Error details: {}".format(cancellation_details.error_details))
-    except Exception as e:
-        st.error(f"An error occurred: {e}")              
+        st.error(f"An error occurred: {e}")                    
 
 def transcribe_real_time_audio(lang_code):
     st.info("Speak into your microphone 🗣️...", icon="💡")
@@ -192,6 +140,9 @@ def transcribe_real_time_audio(lang_code):
             if result.reason == speechsdk.ResultReason.RecognizedSpeech:
                 st.subheader("Transcription")
                 st.success("{}".format(result.text))
+                if lang_code == 'vi-VN':
+                    speech_config.speech_synthesis_voice_name = 'vi-VN-HoaiMyNeural'
+                # speech_config.speech_synthesis_voice_name = "zh-CN-XiaoxiaoMultilingualNeural"
                 speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config)
                 result = speech_synthesizer.speak_text_async(result.text).get()
             elif result.reason == speechsdk.ResultReason.NoMatch:
@@ -200,7 +151,8 @@ def transcribe_real_time_audio(lang_code):
                 cancellation_details = result.cancellation_details
                 st.error("Speech Recognition canceled: {}".format(cancellation_details.reason))
                 if cancellation_details.reason == speechsdk.CancellationReason.Error:
-                    st.error("Error details: {}".format(cancellation_details.error_details))    
+                    st.error("Error details: {}".format(cancellation_details.error_details))
+                    
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return None
@@ -209,22 +161,6 @@ if req_type=="stt":
     st.info("Speak in "+lang)
     if st.button("Start Transcription"):
         transcribe_real_time_audio(lang_code)
-elif req_type=="ttsm":
-    st.info("Type text in "+lang)
-    text = st.text_area("Enter text for Text-to-Speech")
-    if st.button("Generate Speech"):
-        if text.strip()=="":
-            st.error('Dont leave it empty😪! Enter text 😁')
-        else:  
-            text_to_speech_mono(text,lang_code)
-elif req_type=="ttsmu":
-    st.info("Type text in "+lang)
-    text = st.text_area("Enter text for Text-to-Speech")
-    if st.button("Generate Speech"):
-        if text.strip()=="":
-            st.error('Dont leave it empty😪! Enter text 😁')
-        else:  
-            text_to_speech_multi(text,lang_code)
 else:
     st.info("Type text in "+lang)
     text = st.text_area("Enter text for Text-to-Speech")
