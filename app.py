@@ -71,7 +71,7 @@ st.title(f"{option} with Azure AI"+icon)
 def text_to_speech(text,lang_code):
     try:
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
-        audio_output_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
+        audio_output_config = speechsdk.audio.AudioOutputConfig(filename=unique_filepath)
         # audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
         speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_output_config)
 
@@ -133,7 +133,10 @@ def text_to_speech(text,lang_code):
 
                 # Check the result
                 if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
-                    print("Speech synthesized for text.")
+                    st.success("Synthesized Speech !")
+                    audio_file = open(unique_filepath, "rb")
+                    audio_bytes = audio_file.read()
+                    st.audio(audio_bytes, format="audio/wav")
                 elif result.reason == speechsdk.ResultReason.Canceled:
                     cancellation_details = result.cancellation_details
                     print(f"Speech synthesis canceled: {cancellation_details.reason}")
@@ -146,14 +149,17 @@ def text_to_speech_mono(text,lang_code):
     try:
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
         speech_config.speech_synthesis_language=lang_code
-        audio_output_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
+        audio_output_config = speechsdk.audio.AudioOutputConfig(filename=unique_filepath)
         # audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
         speech_config.speech_synthesis_voice_name = 'vi-VN-HoaiMyNeural'
         speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_output_config)
         with st.spinner("Speaking 🗣️..."):
             result = speech_synthesizer.speak_text_async(text).get()
             if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
-                st.success("Synthesized Speech !")
+                st.success("Synthesized Speech !")   
+                audio_file = open(unique_filepath, "rb")
+                audio_bytes = audio_file.read()
+                st.audio(audio_bytes, format="audio/wav")
             elif result.reason == speechsdk.ResultReason.Canceled:
                 cancellation_details = result.cancellation_details
                 st.error("Speech synthesis canceled due to ⚠{}".format(cancellation_details.reason))
@@ -167,14 +173,17 @@ def text_to_speech_multi(text,lang_code):
     try:
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
         speech_config.speech_synthesis_language=lang_code
-        audio_output_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
+        audio_output_config = speechsdk.audio.AudioOutputConfig(filename=unique_filepath)
         # audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
         speech_config.speech_synthesis_voice_name = 'zh-CN-XiaoxiaoMultilingualNeural'
         speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config,audio_config=audio_output_config)
         with st.spinner("Speaking 🗣️..."):
             result = speech_synthesizer.speak_text_async(text).get()
             if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
-                st.success("Synthesized Speech !")
+                st.success("Synthesized Speech !")   
+                audio_file = open(unique_filepath, "rb")
+                audio_bytes = audio_file.read()
+                st.audio(audio_bytes, format="audio/wav")
             elif result.reason == speechsdk.ResultReason.Canceled:
                 cancellation_details = result.cancellation_details
                 st.error("Speech synthesis canceled due to ⚠{}".format(cancellation_details.reason))
