@@ -1,8 +1,7 @@
+python_version == "3.11";
 streamlit
 azure-cognitiveservices-speech
 python-dotenv
 vinorm
-maturin
 langdetect
-underthesea
-datetime; python_version == "3.11"
+datetime
