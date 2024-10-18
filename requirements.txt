@@ -2,11 +2,8 @@ streamlit
 azure-cognitiveservices-speech
 python-dotenv
 streamlit_webrtc
-<<<<<<< HEAD
-=======
 vinorm
 langdetect
 underthesea
 re
 datetime
->>>>>>> a3cbcbf (Your commit message here)
