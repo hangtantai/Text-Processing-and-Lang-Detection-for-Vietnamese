@@ -4,5 +4,4 @@ python-dotenv
 vinorm
 langdetect
 underthesea
-re
 datetime
