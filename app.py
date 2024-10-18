@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import os # file
 # from vinorm import TTSnorm # mapping word by word
 from langdetect import detect, DetectorFactory, LangDetectException # detect vi or en
-from underthesea import lang_detect
+# from underthesea import lang_detect
 import re # search
 from datetime import datetime # for timestamp
 
