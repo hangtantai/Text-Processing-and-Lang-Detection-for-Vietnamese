@@ -1,6 +1,0 @@
-streamlit
-azure-cognitiveservices-speech
-python-dotenv
-vinorm
-langdetect
-datetime
