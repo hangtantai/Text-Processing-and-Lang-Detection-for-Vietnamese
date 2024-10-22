@@ -1,0 +1,11 @@
+streamlit
+azure-cognitiveservices-speech
+python-dotenv
+vinorm
+underthesea
+pandas
+numpy
+elevenlabs
+langdetect
+datetime
+re
