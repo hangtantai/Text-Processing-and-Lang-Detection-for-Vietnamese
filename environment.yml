@@ -12,6 +12,7 @@ dependencies:
     - pandas
     - numpy
     - python-dotenv
+    - azure
     - azure-cognitiveservices-speech
     - elevenlabs
     - langdetect
