@@ -1,2 +1,2 @@
-vinorm
-underthesea
+install vinorm
+install underthesea
