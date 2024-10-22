@@ -14,3 +14,6 @@ dependencies:
     - python-dotenv
     - azure-cognitiveservices-speech
     - elevenlabs
+    - langdetect
+    - datetime
+    - re
