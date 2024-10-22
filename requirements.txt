@@ -7,5 +7,3 @@ pandas
 numpy
 elevenlabs
 langdetect
-datetime
-re
