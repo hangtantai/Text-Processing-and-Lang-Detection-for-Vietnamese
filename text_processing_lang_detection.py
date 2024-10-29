@@ -77,3 +77,15 @@ print(f"English word: {english_words}")
 end_time = time.time()
 print(f"Response time {end_time-start_time}")
 # just about 1 seconds for the first time
+
+# OUTPUT ENTITIES
+# [[('bạn', 'N', 'B-NP', 'O')], [('một', 'M', 'B-NP', 'O')], [('căn hộ', 'M', 'B-NP', 'O')], [('3', 'M', 'B-NP', 'O')], 
+[('phòng', 'N', 'B-NP', 'O')], [('Thành phố', 'N', 'B-NP', 'O')], [('Hồ Chí Minh', 'Np', 'B-NP', 'B-PER')], 
+[('quận', 'N', 'B-NP', 'O')], [('2', 'M', 'B-NP', 'O')], [('ngân sách', 'N', 'B-NP', 'O')], [('3', 'M', 'B-NP', 'O')], 
+[('tỷ', 'M', 'B-NP', 'O')], [('VNĐ', 'Np', 'B-NP', 'B-PER')], [('1', 'M', 'B-NP', 'O')], [('Căn hộ', 'M', 'B-NP', 'O')], 
+[('The Vista', 'Np', 'B-NP', 'B-PER')], [('3', 'M', 'B-NP', 'O')], [('phòng', 'N', 'B-NP', 'O')], [('2', 'M', 'B-NP', 'O')], 
+[('phòng', 'N', 'B-NP', 'O')], [('diện tích', 'N', 'B-NP', 'O')], [('100', 'M', 'B-NP', 'O')], [('m2', 'M', 'B-NP', 'O')], 
+[('giá', 'N', 'B-NP', 'O')], [('2.8', 'M', 'B-NP', 'O')], [('tỷ', 'M', 'B-NP', 'O'), ('VNĐ', 'Np', 'B-NP', 'B-PER')], [('ban', 'N', 'B-NP', 'O'), ('công', 'N', 'B-NP', 'O')]]
+
+# English word
+['3', '2', '3', 'vnđ', '1', 'the vista', '3', '2', '100', 'm2', '2.8', 'vnđ', 'ban']
