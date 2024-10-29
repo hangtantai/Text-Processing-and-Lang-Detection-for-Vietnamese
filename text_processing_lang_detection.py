@@ -22,10 +22,7 @@ def predict_language(text, model, languages=('__label__en', '__label__vi')):
     return en_prob, vi_prob
 
 # processing word: comparing vi or en word
-def process_word(word):
-    if word.isdigit():
-        return None
-    
+def process_word(word):    
     en_prob, vi_prob = predict_language(word, ft)
     return word if en_prob > vi_prob else None
 
@@ -45,28 +42,34 @@ def filter_english_words(entities_per_sentence):
 # processing text
 def process_text(text):
     # Text normalization: remove excess whitespace and lower all sentence
+    processed_sentences = []
     text = text.strip()
     text = re.sub(r"\s+", " ", text) 
 
     # Sentence Segmentation before NER: This step reduces the text chunk that NER has to process at one time, improving both accuracy and speed.
     sentences = sent_tokenize(text)
-
     # Word Segmentation
     for elem in sentences:
         word_list = word_tokenize(elem)
 
-    # POS Tagging to Aid NER: helps identify nouns, numbers, and other parts of speech
-    tagged_sentences = [pos_tag(sentence) for sentence in word_list]
+        # POS Tagging to Aid NER: helps identify nouns, numbers, and other parts of speech
+        tagged_sentences = [pos_tag(sentence) for sentence in word_list]
 
-    # Apply NER Selectively Based on POS Tags
-    entities_per_sentence = [ner(sentence) for sentence, tags in zip(word_list, tagged_sentences) if any(tag[1] in ['N', 'M', 'Np'] for tag in tags)]
-
-    return entities_per_sentence
+        # Apply NER Selectively Based on POS Tags
+        entities_per_sentence = [ner(sentence) for sentence, tags in zip(word_list, tagged_sentences) if any(tag[1] in ['N', 'M', 'Np'] for tag in tags)]
+        processed_sentences.extend(entities_per_sentence)
+    return processed_sentences
 
 ### Test case
 start_time = time.time()
 ft = fasttext.load_model("lid.176.bin")
-text = 'Nguyễn Minh Trí mua một căn hộ 3 tỷ VNĐ tại Thành phố Hồ Chí Minh, Hello, The Skyline, support, fix, counter.'
+text = '''
+"Dựa trên yêu cầu của bạn về một căn hộ 3 phòng ngủ tại Thành phố Hồ Chí Minh, quận 2 với ngân sách 3 tỷ VNĐ, đây là một số lựa chọn:
+
+1. Căn hộ The Vista: 3 phòng ngủ, 2 phòng tắm, diện tích: 100 m2, giá: 2.8 tỷ VNĐ, có ban công và bể bơi.
+2. Căn hộ Diamond Island: 3 phòng ngủ, 2 phòng tắm, diện tích: 110 m vuông, giá: 3.0 tỷ VNĐ, gần trung tâm thương mại và trường học.
+3. Căn hộ An Phú Plaza: 3 phòng ngủ, 1 phòng tắm, diện tích: 95 m^2, giá: 2.5 tỷ VNĐ, có khu vui chơi trẻ em và chỗ đậu xe."
+'''
 entities_per_sentence = process_text(text)
 print(f"Entities: {entities_per_sentence}")
 english_words = filter_english_words(entities_per_sentence)
