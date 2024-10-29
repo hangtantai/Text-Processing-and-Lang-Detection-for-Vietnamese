@@ -1,12 +1,2 @@
-streamlit
-azure-cognitiveservices-speech
-python-dotenv
-streamlit_webrtc
-vinorm
+fasttext
 underthesea
-pandas
-numpy
-elevenlabs
-langdetect
-re
-datetime
