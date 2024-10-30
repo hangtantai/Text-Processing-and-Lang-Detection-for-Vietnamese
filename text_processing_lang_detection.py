@@ -3,8 +3,15 @@ import time
 import re
 import fasttext
 import multiprocessing as mp
+from function_util import TextClassifier
+
 # Load the language identification model
 ft = fasttext.load_model("lid.176.bin")
+# Initialize the TextClassifier
+classifier = TextClassifier()
+
+# OOV
+out_vocab = ["de", "van", ""]
 
 # Get prediction language with two option en or vi
 def predict_language(text, model, languages=('__label__en', '__label__vi')):
@@ -23,14 +30,16 @@ def predict_language(text, model, languages=('__label__en', '__label__vi')):
 
 # processing word: comparing vi or en word
 def process_word(word):    
-    en_prob, vi_prob = predict_language(word, ft)
+    if word[1] == "O":
+        return None
+    en_prob, vi_prob = predict_language(word[0], ft)
     return word if en_prob > vi_prob else None
 
 # filtering english word from processing text
 def filter_english_words(entities_per_sentence):
     english_words = []
 
-    words = [entity[0].lower() for sentence in entities_per_sentence for entity in sentence]
+    words = [(sentence[0].lower(), sentence[3]) for sentence in entities_per_sentence ]
     
     with mp.Pool(mp.cpu_count()) as pool:
         results = pool.map(process_word, words)
@@ -60,32 +69,67 @@ def process_text(text):
         processed_sentences.extend(entities_per_sentence)
     return processed_sentences
 
-### Test case
-start_time = time.time()
-ft = fasttext.load_model("lid.176.bin")
-text = '''
-"Dựa trên yêu cầu của bạn về một căn hộ 3 phòng ngủ tại Thành phố Hồ Chí Minh, quận 2 với ngân sách 3 tỷ VNĐ, đây là một số lựa chọn:
 
-1. Căn hộ The Vista: 3 phòng ngủ, 2 phòng tắm, diện tích: 100 m2, giá: 2.8 tỷ VNĐ, có ban công và bể bơi.
-2. Căn hộ Diamond Island: 3 phòng ngủ, 2 phòng tắm, diện tích: 110 m vuông, giá: 3.0 tỷ VNĐ, gần trung tâm thương mại và trường học.
-3. Căn hộ An Phú Plaza: 3 phòng ngủ, 1 phòng tắm, diện tích: 95 m^2, giá: 2.5 tỷ VNĐ, có khu vui chơi trẻ em và chỗ đậu xe."
-'''
+
+def process_sentence(sentence):
+    word_list = word_tokenize(sentence)
+    tagged_sentences = [pos_tag(sentence) for sentence in word_list]
+    entities_per_sentence = [ner(sentence) for sentence, tags in zip(word_list, tagged_sentences) if any(tag[1] in ['N', 'M', 'Np'] for tag in tags)]
+    return entities_per_sentence
+
+def process_sentences(sentences):
+    processed_sentences = []
+    sentences = sentences.strip()
+    sentences = re.sub(r"\s+", " ", sentences) 
+    sentences = sent_tokenize(sentences)
+
+    # print(sentences)
+    with mp.Pool(mp.cpu_count()) as pool:
+        results = pool.map(process_sentence, sentences)
+    print(results)
+    for result in results:
+        processed_sentences.extend(result)
+    
+    return processed_sentences
+
+# Function to detect unknown entities
+def detect_unknown_entities(entities_per_sentence):
+    unknown_entities = []
+    for sentence in entities_per_sentence:
+        for entity in sentence:
+            entity_text = entity[0]
+            category = classifier.classify(entity_text)
+            if category == 'unknown':
+                unknown_entities.append(entity)
+    return unknown_entities
+
+### Test case
+
+# ft = fasttext.load_model("lid.176.bin")
+text = """
+Nguyễn Văn Linh Parkway , Pasteur Street, Alexander de Rhodes Street, Charles De Gaulle Street
+"""
+print("WIHOUT MULTIPROCESSING")
+start_time = time.time()
+
 entities_per_sentence = process_text(text)
 print(f"Entities: {entities_per_sentence}")
-english_words = filter_english_words(entities_per_sentence)
+unknown_word = detect_unknown_entities(entities_per_sentence)
+print(f"Unknown Word: {unknown_word}")
+english_words = filter_english_words(unknown_word)
 print(f"English word: {english_words}")
 end_time = time.time()
 print(f"Response time {end_time-start_time}")
 # just about 1 seconds for the first time
 
-# OUTPUT ENTITIES
-# [[('bạn', 'N', 'B-NP', 'O')], [('một', 'M', 'B-NP', 'O')], [('căn hộ', 'M', 'B-NP', 'O')], [('3', 'M', 'B-NP', 'O')], 
-[('phòng', 'N', 'B-NP', 'O')], [('Thành phố', 'N', 'B-NP', 'O')], [('Hồ Chí Minh', 'Np', 'B-NP', 'B-PER')], 
-[('quận', 'N', 'B-NP', 'O')], [('2', 'M', 'B-NP', 'O')], [('ngân sách', 'N', 'B-NP', 'O')], [('3', 'M', 'B-NP', 'O')], 
-[('tỷ', 'M', 'B-NP', 'O')], [('VNĐ', 'Np', 'B-NP', 'B-PER')], [('1', 'M', 'B-NP', 'O')], [('Căn hộ', 'M', 'B-NP', 'O')], 
-[('The Vista', 'Np', 'B-NP', 'B-PER')], [('3', 'M', 'B-NP', 'O')], [('phòng', 'N', 'B-NP', 'O')], [('2', 'M', 'B-NP', 'O')], 
-[('phòng', 'N', 'B-NP', 'O')], [('diện tích', 'N', 'B-NP', 'O')], [('100', 'M', 'B-NP', 'O')], [('m2', 'M', 'B-NP', 'O')], 
-[('giá', 'N', 'B-NP', 'O')], [('2.8', 'M', 'B-NP', 'O')], [('tỷ', 'M', 'B-NP', 'O'), ('VNĐ', 'Np', 'B-NP', 'B-PER')], [('ban', 'N', 'B-NP', 'O'), ('công', 'N', 'B-NP', 'O')]]
 
-# English word
-['3', '2', '3', 'vnđ', '1', 'the vista', '3', '2', '100', 'm2', '2.8', 'vnđ', 'ban']
+print("WITH MULTIPROCESSING")
+start_time = time.time()
+entities_per_sentence = process_text(text)
+print(f"Entities: {entities_per_sentence}")
+unknown_word = detect_unknown_entities(entities_per_sentence)
+print(f"Unknown Word: {unknown_word}")
+english_words = filter_english_words(unknown_word)
+print(f"English word: {english_words}")
+end_time = time.time()
+print(f"Response time {end_time-start_time}")
